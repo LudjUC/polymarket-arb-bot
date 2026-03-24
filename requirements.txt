@@ -1,0 +1,16 @@
+# Core
+websocket-client>=1.7.0
+requests>=2.31.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
+
+# Optional: live order execution
+# py-clob-client>=0.15.0
+# web3>=6.0.0
+
+# Optional: enhanced analytics / simulation
+# pandas>=2.0.0
+# numpy>=1.24.0
+# matplotlib>=3.7.0

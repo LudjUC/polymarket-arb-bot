@@ -5,13 +5,13 @@ Usage:
   # Live mode (reads real BTC prices, uses real Polymarket markets):
   python main.py --mode live
 
-  # Simulation with synthetic data:
+  # Simulation with live feeds (default):
   python main.py --mode simulate
 
-  # Simulation with historical CSV:
-  python main.py --mode simulate --data data/historical/btc_prices.csv
+  # Shorter or longer simulation window:
+  python main.py --mode simulate --duration 60
 
-  # Generate sample CSV for testing:
+  # Generate sample CSV for offline testing:
   python main.py --mode generate-data
 
   # Dry-run: connects to real feeds but prints signals without executing:
@@ -19,9 +19,9 @@ Usage:
 
 Flags:
   --mode          live | simulate | generate-data
-  --data          Path to historical CSV (simulate mode)
+  --duration      Simulation window in seconds (default 180)
   --no-execute    Print signals only, no orders
-  --max-ticks     Limit ticks in simulation mode
+  --debug         Enable DEBUG log level
 """
 
 import argparse
@@ -74,14 +74,11 @@ def run_live(execute: bool = True) -> None:
         log.info("  NOTE: execution.simulation_mode=True — orders are simulated")
     log.info("=" * 60)
 
-    # Bootstrap price before WS connects
     bootstrap_price_store()
 
-    # Start WebSocket feed
     feed = BinanceWebSocketFeed()
     feed.start()
 
-    # Build pipeline
     parser = MarketParser()
     risk = RiskManager()
     generator = SignalGenerator(
@@ -90,11 +87,9 @@ def run_live(execute: bool = True) -> None:
     )
     executor = ExecutionEngine(risk_manager=risk)
 
-    # Initial market load
     log.info("Loading Polymarket markets…")
     parser.refresh()
 
-    # Register price callback: evaluate every tick
     def on_tick(tick):
         if _shutdown:
             return
@@ -117,7 +112,6 @@ def run_live(execute: bool = True) -> None:
 
     PRICE_STORE.register_callback(on_tick)
 
-    # Main loop: heartbeat + monitoring
     try:
         while not _shutdown:
             time.sleep(CONFIG.heartbeat_interval_s)
@@ -128,32 +122,35 @@ def run_live(execute: bool = True) -> None:
 
 
 # ------------------------------------------------------------------
-# Simulation mode  (live time-based window with real data)
+# Simulation mode
 # ------------------------------------------------------------------
 
 def run_simulation(duration_s: float = 180.0) -> None:
-    """
-    Run a live simulation for `duration_s` seconds (default 3 minutes).
-      - Real BTC prices from Binance WebSocket
-      - Real Polymarket BTC markets from Gamma API
-      - Simulated fills with slippage (no real money)
-      - WIN/LOSS settled against final BTC price at end of window
-    """
     minutes = int(duration_s // 60)
     secs    = int(duration_s % 60)
     dur_str = f"{minutes}m {secs:02d}s" if secs else f"{minutes}m"
 
+    _C = CONFIG
+
     print("\n" + "═" * 65)
     print("   🚀  POLYMARKET ARB BOT — LIVE SIMULATION MODE")
     print(f"   Duration : {dur_str}  |  Real data  |  No real money")
-    print("   Feed     : Binance WebSocket (BTC/USDT)")
-    print("   Markets  : Polymarket Gamma API (live)")
-    print("═" * 65 + "\n")
-
-    from config import CONFIG as _C
-    print(f"   Strategy : BUY YES when BTC≥threshold and YES<{_C.signal.buy_yes_max_price:.0%}")
-    print(f"             BUY NO  when BTC<threshold and YES>{_C.signal.buy_no_min_yes_price:.0%}")
-    print(f"   Min edge : {_C.signal.min_edge:.0%}  |  Markets: expire within {_C.polymarket.max_time_to_expiry_s/3600:.0f}h")
+    print("   BTC feed : Binance WebSocket (BTC/USDT)")
+    eth_tag = "enabled (fallback)" if _C.polymarket.allow_eth_fallback else "disabled"
+    print(f"   ETH feed : {eth_tag}")
+    print(f"   Markets  : Polymarket Gamma API (live)")
+    print("═" * 65)
+    print()
+    print(f"   Strategy : BUY YES when spot≥threshold and YES<{_C.signal.buy_yes_max_price:.0%}")
+    print(f"              BUY NO  when spot<threshold and YES>{_C.signal.buy_no_min_yes_price:.0%}")
+    print()
+    print(f"   Expiry   : {_C.polymarket.min_time_to_expiry_s/60:.0f}min – "
+          f"{_C.polymarket.max_time_to_expiry_s/3600:.0f}h  "
+          f"(short<72h | medium<7d | long≤14d)")
+    print(f"   Min edge : short={_C.signal.min_edge_short:.0%}  "
+          f"medium={_C.signal.min_edge_medium:.0%}  "
+          f"long={_C.signal.min_edge_long:.0%}")
+    print(f"   Liquidity: ≥${_C.polymarket.min_market_liquidity_usd:,.0f}")
     print()
 
     sim = Simulator(duration_s=duration_s)
@@ -172,8 +169,8 @@ def _heartbeat(risk: RiskManager) -> None:
     age_str = f"{tick.age_ms}ms" if tick else "N/A"
     status = risk.status()
     log.info(
-        "HEARTBEAT | BTC=%s (age=%s) | open_pos=%d | daily_loss=$%.2f | halted=%s | "
-        "signals=%d fills=%d",
+        "HEARTBEAT | BTC=%s (age=%s) | open_pos=%d | daily_loss=$%.2f "
+        "| halted=%s | signals=%d fills=%d",
         price_str,
         age_str,
         status["open_positions"],
@@ -196,7 +193,7 @@ def _heartbeat(risk: RiskManager) -> None:
 def _print_signal(sig: TradeSignal) -> None:
     print(
         f"\n{'─'*60}\n"
-        f"  📊 SIGNAL  [{sig.signal_id}]\n"
+        f"  📊 SIGNAL  [{sig.signal_id}][{sig.expiry_tier}]\n"
         f"  Market:    {sig.question[:70]}\n"
         f"  Side:      {sig.target_outcome}\n"
         f"  BTC price: ${sig.btc_price_at_signal:,.2f}\n"
@@ -269,7 +266,10 @@ def main() -> None:
     if args.debug:
         import logging
         logging.getLogger().setLevel(logging.DEBUG)
-        for name in ("market_parser", "signal_generator", "condition_engine", "pricing_engine"):
+        for name in (
+            "market_parser", "signal_generator", "condition_engine",
+            "pricing_engine", "simulator",
+        ):
             logging.getLogger(name).setLevel(logging.DEBUG)
 
     if args.mode == "generate-data":

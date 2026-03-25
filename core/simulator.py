@@ -3,19 +3,17 @@ core/simulator.py — Live simulation with realistic short-term exit pricing.
 
 Strategy summary:
   1. Connect to Binance WS for live BTC price
-  2. Load short-term Polymarket BTC markets (expiring within 72h)
-  3. Detect mispricing: BTC already above/below threshold but Polymarket hasn't caught up
+  2. Load Polymarket BTC/ETH markets (expiring within configured window, up to 14 days)
+  3. Detect mispricing: spot price already above/below threshold but Polymarket
+     hasn't repriced yet
   4. Simulate entry + gradual exit (Polymarket price drifts toward fair value)
   5. Track full metrics: PnL, hold time, drawdown, win rate
 
-Exit model (the important one):
+Exit model:
   We do NOT resolve trades to 1.0/0.0 instantly.
-  Instead, we simulate Polymarket price gradually correcting over the hold period.
-  The target exit price is based on how far BTC is from the threshold:
-    - BTC 2% above $70k threshold → target YES price ~0.85–0.90
-    - We assume correction at ~25% of remaining gap per minute
-    - Exit at min_hold_s or when correction reaches target
-  This is conservative and reflects real Polymarket behavior.
+  Instead we simulate Polymarket price gradually correcting over the hold period.
+  Target exit price is based on how far spot is from the threshold at exit time.
+  Correction follows exponential decay: ~25% of remaining gap closed per minute.
 """
 
 import csv
@@ -54,7 +52,7 @@ class SimTrade:
     signal_id: str
     question: str
     side: str                      # "YES" or "NO"
-    entry_price: float             # token price paid (after slippage)
+    entry_price: float
     entry_slippage: float
     btc_at_entry: float
     size_usd: float
@@ -62,27 +60,17 @@ class SimTrade:
     threshold_usd: Optional[float]
     condition_type: str
     implied_certainty_at_entry: float
+    expiry_tier: str = "short"
     entered_at: float = field(default_factory=time.time)
 
-    # Exit fields — filled in during/after simulation
     btc_at_exit: Optional[float] = None
     exit_price: Optional[float] = None
     exited_at: Optional[float] = None
-    result: str = "UNRESOLVED"     # "WIN" | "LOSS" | "UNRESOLVED"
+    result: str = "UNRESOLVED"
     pnl_usd: float = 0.0
     hold_time_s: float = 0.0
 
     def compute_target_exit_price(self, current_btc: float) -> float:
-        """
-        Compute the realistic target YES token price based on current BTC position.
-
-        Logic:
-          - BTC clearly above/below threshold → target 0.80–0.92
-          - BTC near threshold → target closer to 0.60–0.75
-          - We are NOT targeting 1.0 — markets don't instantly resolve.
-
-        This is the price we expect Polymarket to drift TOWARD, not the final price.
-        """
         if self.threshold_usd is None or self.threshold_usd <= 0:
             return self.entry_price
 
@@ -91,34 +79,22 @@ class SimTrade:
         if self.side == "YES":
             if self.condition_type == "price_above":
                 dist = (current_btc - self.threshold_usd) / self.threshold_usd
-            else:  # price_below
+            else:
                 dist = (self.threshold_usd - current_btc) / self.threshold_usd
-        else:  # NO token — we win when condition is NOT met
+        else:
             if self.condition_type == "price_above":
                 dist = (self.threshold_usd - current_btc) / self.threshold_usd
             else:
                 dist = (current_btc - self.threshold_usd) / self.threshold_usd
 
         if dist <= 0:
-            # Condition has reversed against us — target is well below entry
             return max(0.05, self.entry_price - 0.15)
 
-        # Positive distance: condition in our favor
-        # 0.5% away → ~0.72, 1% → ~0.78, 2% → ~0.84, 5% → ~0.92
         target = exit_cfg.yes_drift_target_min + min(dist * 4.0, 0.12)
         target = min(target, exit_cfg.yes_drift_target_max)
-
         return round(target, 4)
 
     def simulate_exit(self, current_btc: float, elapsed_s: float) -> None:
-        """
-        Simulate Polymarket price drifting toward fair value over time.
-
-        The longer we hold, the more the market corrects.
-        Correction model: exponential decay toward target price.
-          exit_price = target - (target - entry) * exp(-k * t)
-          where k is the correction speed (default 0.25/min).
-        """
         exit_cfg = CONFIG.exit
         fee = CONFIG.signal.taker_fee_fraction
 
@@ -128,26 +104,15 @@ class SimTrade:
 
         target = self.compute_target_exit_price(current_btc)
 
-        # How much of the gap has closed?
-        # k = correction_speed_per_min / 60 (per second)
         k = exit_cfg.correction_speed_per_min / 60.0
         fraction_closed = 1.0 - math.exp(-k * elapsed_s)
-
-        # Don't close more than 80% of gap in a 3-minute window (realistic)
         fraction_closed = min(fraction_closed, 0.80)
 
-        if target > self.entry_price:
-            # Favorable: price drifted up
-            self.exit_price = self.entry_price + (target - self.entry_price) * fraction_closed
-        else:
-            # Unfavorable: condition reversed, price drifted down
-            self.exit_price = self.entry_price + (target - self.entry_price) * fraction_closed
-
+        self.exit_price = self.entry_price + (target - self.entry_price) * fraction_closed
         self.exit_price = max(0.01, min(0.99, round(self.exit_price, 4)))
 
-        # PnL
         gross = (self.exit_price - self.entry_price) * self.size_usd
-        total_fee = fee * self.size_usd  # entry fee only (no exit fee on Polymarket for limit)
+        total_fee = fee * self.size_usd
         self.pnl_usd = round(gross - total_fee, 4)
 
         if self.pnl_usd > 0:
@@ -159,7 +124,7 @@ class SimTrade:
 
 
 # ---------------------------------------------------------------------------
-# Simulation result with max drawdown
+# SimulationResult
 # ---------------------------------------------------------------------------
 
 @dataclass
@@ -177,7 +142,7 @@ class SimulationResult:
     max_drawdown_usd: float = 0.0
     runtime_s: float = 0.0
     trades: List[SimTrade] = field(default_factory=list)
-    signals: List[dict] = field(default_factory=list)   # backward compat
+    signals: List[dict] = field(default_factory=list)
 
     def print_summary(self) -> None:
         win_rate = (self.wins / self.executed_trades * 100) if self.executed_trades else 0.0
@@ -208,8 +173,9 @@ class SimulationResult:
             for t in self.trades:
                 icon = {"WIN": "✅", "LOSS": "❌", "UNRESOLVED": "⏳"}.get(t.result, "?")
                 thr  = f"${t.threshold_usd:,.0f}" if t.threshold_usd else "N/A"
+                tier_tag = f"[{t.expiry_tier}]" if t.expiry_tier else ""
                 print(
-                    f"  {icon} [{t.side}]  {t.question[:50]}\n"
+                    f"  {icon} {tier_tag} [{t.side}]  {t.question[:48]}\n"
                     f"     threshold={thr}  BTC@entry=${t.btc_at_entry:,.0f}"
                     f"  BTC@exit=${t.btc_at_exit or 0:,.0f}\n"
                     f"     entry={t.entry_price:.3f}  exit={t.exit_price or 0:.3f}"
@@ -217,20 +183,26 @@ class SimulationResult:
                     f"  PnL=${t.pnl_usd:+.2f}"
                 )
                 if t.implied_certainty_at_entry:
-                    print(f"     impl_prob={t.implied_certainty_at_entry:.3f}  entry_slippage={t.entry_slippage:.2%}")
+                    print(f"     impl_prob={t.implied_certainty_at_entry:.3f}"
+                          f"  entry_slippage={t.entry_slippage:.2%}")
                 print()
         else:
             print("  No trades executed.")
             print()
             print("  Why no trades?")
-            print("  • Polymarket may have NO markets expiring within 72h right now.")
-            print("    This is normal — short-term BTC markets only appear on Polymarket")
-            print("    during high-volatility periods or near weekly resolution dates.")
+            print(
+                f"  • No Polymarket BTC/ETH markets passed the current filters.\n"
+                f"    The bot searched for markets expiring within "
+                f"{CONFIG.polymarket.max_time_to_expiry_s / 3600:.0f}h "
+                f"with ≥${CONFIG.polymarket.min_market_liquidity_usd:.0f} liquidity."
+            )
             print()
-            print("  • Try running on a Sunday evening (weekly markets resolve Mon)")
-            print("    or during a period of high BTC volatility.")
-            print()
-            print("  • To see what markets were available: python debug_markets.py")
+            print("  Possible fixes:")
+            print("  • Run python debug_markets.py to inspect live market availability.")
+            print("  • Polymarket may have no active BTC/ETH threshold markets today.")
+            print("  • Check whether market question format has changed (new API schema).")
+            print("  • Try running during high-volatility periods or near weekly")
+            print("    resolution dates (Sunday/Monday for weekly markets).")
 
         print("═" * 65 + "\n")
 
@@ -273,20 +245,17 @@ class Simulator:
         start_ts = time.time()
         deadline = start_ts + self._duration_s
 
-        # 1. Bootstrap
         log.info("Bootstrapping BTC price via REST…")
         bootstrap_price_store()
         initial = PRICE_STORE.latest()
         if initial:
             log.info("Initial BTC price: $%.2f", initial.price)
 
-        # 2. Start WebSocket
         feed = BinanceWebSocketFeed(store=PRICE_STORE)
         feed.start()
         log.info("WS feed started — waiting up to 5s for first live tick…")
         _wait_for_price(PRICE_STORE, 5.0)
 
-        # 3. Load markets
         if self._forced_markets is not None:
             parser = _StaticMarketParser(self._forced_markets)
             log.info("Using %d pre-loaded markets", len(self._forced_markets))
@@ -296,26 +265,23 @@ class Simulator:
 
         if not parser.get_markets():
             log.warning(
-                "No short-term markets available. Simulation will run but generate no signals.\n"
-                "  This is expected outside of high-vol periods.\n"
-                "  Polymarket publishes daily/weekly BTC markets inconsistently.\n"
-                "  Try: python debug_markets.py  to inspect what's available."
+                "No tradeable markets found after initial refresh. "
+                "The momentum logger will fire during the run to show "
+                "hypothetical opportunities. Use python debug_markets.py "
+                "to inspect live market availability."
             )
 
-        # 4. Build pipeline
         gen = SignalGenerator(
             market_parser=parser,
             capital_available_usd=CONFIG.risk.total_capital_usd,
         )
-        gen._dedup_window_s = 30.0  # allow re-evaluating same market after 30s
+        gen._dedup_window_s = 30.0
         risk = RiskManager()
 
-        # 5. Main loop
         log.info("▶  Running for %.0fs…", self._duration_s)
         last_price     = 0.0
         last_status_ts = start_ts
         running_pnl    = 0.0
-        peak_pnl       = 0.0
 
         while time.time() < deadline:
             tick = PRICE_STORE.latest()
@@ -329,27 +295,25 @@ class Simulator:
             last_price = tick.price
             result.total_ticks += 1
 
-            # Check for exit conditions on open trades
             self._check_exits(tick, result)
 
-            # Evaluate signals
             signals = gen.run(tick)
             result.total_signals += len(signals)
             for sig in signals:
                 self._enter_trade(sig, tick, risk, result)
 
-            # Status print every 15s
             if time.time() - last_status_ts >= 15.0:
                 remaining = max(0, deadline - time.time())
                 open_pos  = sum(1 for t in self._sim_trades if t.exited_at is None)
                 log.info(
-                    "⏱  %.0fs left | BTC=$%.2f | ticks=%d sigs=%d trades=%d open=%d pnl=$%+.2f",
+                    "⏱  %.0fs left | BTC=$%.2f | ticks=%d sigs=%d "
+                    "trades=%d open=%d pnl=$%+.2f",
                     remaining, tick.price, result.total_ticks,
-                    result.total_signals, result.executed_trades, open_pos, running_pnl,
+                    result.total_signals, result.executed_trades,
+                    open_pos, running_pnl,
                 )
                 last_status_ts = time.time()
 
-        # 6. Force-exit all still-open trades
         final = PRICE_STORE.latest()
         final_btc = final.price if final else last_price
         log.info("Simulation ended. Settling open trades at BTC=$%.2f", final_btc)
@@ -361,22 +325,24 @@ class Simulator:
 
         feed.stop()
 
-        # 7. Compute aggregates
         ledger_summary = LEDGER.summary()
         result.missed_opportunities = max(
             0, ledger_summary["total_signals"] - result.executed_trades
         )
-        result.trades    = self._sim_trades
-        result.wins      = sum(1 for t in self._sim_trades if t.result == "WIN")
-        result.losses    = sum(1 for t in self._sim_trades if t.result == "LOSS")
+        result.trades     = self._sim_trades
+        result.wins       = sum(1 for t in self._sim_trades if t.result == "WIN")
+        result.losses     = sum(1 for t in self._sim_trades if t.result == "LOSS")
         result.unresolved = sum(1 for t in self._sim_trades if t.result == "UNRESOLVED")
         result.total_pnl_usd = round(sum(t.pnl_usd for t in self._sim_trades), 4)
 
         if self._sim_trades:
-            result.avg_ev_usd = sum(t.expected_value_usd for t in self._sim_trades) / len(self._sim_trades)
-            result.avg_hold_time_s = sum(t.hold_time_s for t in self._sim_trades) / len(self._sim_trades)
+            result.avg_ev_usd = sum(
+                t.expected_value_usd for t in self._sim_trades
+            ) / len(self._sim_trades)
+            result.avg_hold_time_s = sum(
+                t.hold_time_s for t in self._sim_trades
+            ) / len(self._sim_trades)
 
-        # Max drawdown: largest peak-to-trough PnL decline
         cumulative = 0.0
         peak = 0.0
         max_dd = 0.0
@@ -403,7 +369,6 @@ class Simulator:
 
         size_usd = decision.capped_size_usd
 
-        # Slippage: uniform random in [slippage_min, slippage_max]
         slip_min = CONFIG.execution.slippage_min
         slip_max = CONFIG.execution.slippage_max
         slippage = random.uniform(slip_min, slip_max)
@@ -424,6 +389,7 @@ class Simulator:
             threshold_usd=threshold,
             condition_type=ctype or "price_above",
             implied_certainty_at_entry=signal.implied_certainty,
+            expiry_tier=signal.expiry_tier,
         )
 
         with self._lock:
@@ -441,19 +407,18 @@ class Simulator:
         ))
 
         log.info(
-            "💰 ENTER [%s] %s | side=%s  entry=%.3f  slip=%.2f%%  size=$%.0f  "
-            "impl=%.3f  BTC=$%.0f",
-            signal.signal_id, signal.question[:40],
+            "💰 ENTER [%s][%s] %s | side=%s  entry=%.3f  slip=%.2f%%  "
+            "size=$%.0f  impl=%.3f  BTC=$%.0f",
+            signal.signal_id, signal.expiry_tier, signal.question[:35],
             signal.target_outcome, fill_price, slippage * 100,
             size_usd, signal.implied_certainty, tick.price,
         )
 
     # -----------------------------------------------------------------------
-    # Exit checking — time-based and condition-based
+    # Exit checking
     # -----------------------------------------------------------------------
 
     def _check_exits(self, tick: PriceTick, result: SimulationResult) -> None:
-        """Check all open trades for exit conditions."""
         exit_cfg = CONFIG.exit
         now = time.time()
 
@@ -463,21 +428,19 @@ class Simulator:
         for trade in open_trades:
             elapsed = now - trade.entered_at
             if elapsed < exit_cfg.min_hold_s:
-                continue  # too early to exit
+                continue
 
             should_exit = False
             exit_reason = ""
 
-            # Condition 1: max hold time reached
             if elapsed >= exit_cfg.max_hold_s:
                 should_exit = True
                 exit_reason = "max_hold_time"
 
-            # Condition 2: target exit price reached (early exit)
             if not should_exit:
                 target = trade.compute_target_exit_price(tick.price)
-                current_simulated = self._simulate_current_price(trade, tick.price, elapsed)
-                if current_simulated >= target * 0.95:
+                current_sim = self._simulate_current_price(trade, tick.price, elapsed)
+                if current_sim >= target * 0.95:
                     should_exit = True
                     exit_reason = "target_reached"
 
@@ -491,12 +454,12 @@ class Simulator:
                     elapsed, trade.pnl_usd,
                 )
 
-    def _simulate_current_price(self, trade: SimTrade, current_btc: float, elapsed_s: float) -> float:
-        """Estimate where the Polymarket token price is right now."""
+    def _simulate_current_price(
+        self, trade: SimTrade, current_btc: float, elapsed_s: float
+    ) -> float:
         k = CONFIG.exit.correction_speed_per_min / 60.0
         target = trade.compute_target_exit_price(current_btc)
-        fraction = 1.0 - math.exp(-k * elapsed_s)
-        fraction = min(fraction, 0.80)
+        fraction = min(1.0 - math.exp(-k * elapsed_s), 0.80)
         return trade.entry_price + (target - trade.entry_price) * fraction
 
     # -----------------------------------------------------------------------
@@ -510,7 +473,10 @@ class Simulator:
         playback_delay_s: float,
     ) -> SimulationResult:
         parser = _StaticMarketParser(self._forced_markets or [])
-        gen    = SignalGenerator(market_parser=parser, capital_available_usd=CONFIG.risk.total_capital_usd)
+        gen    = SignalGenerator(
+            market_parser=parser,
+            capital_available_usd=CONFIG.risk.total_capital_usd,
+        )
         risk   = RiskManager()
         result = SimulationResult()
         start  = time.time()
@@ -555,7 +521,7 @@ class _StaticMarketParser:
 
 
 # ---------------------------------------------------------------------------
-# CSV / synthetic helpers (kept for --mode generate-data and tests)
+# CSV / synthetic helpers
 # ---------------------------------------------------------------------------
 
 def ticks_from_csv(path: str) -> Generator:
@@ -588,8 +554,16 @@ def generate_synthetic_ticks(
     ts    = int(time.time() * 1000)
     for _ in range(n_ticks):
         z = random.gauss(0, 1)
-        price *= _math.exp((drift - 0.5 * annual_vol**2) * dt + annual_vol * _math.sqrt(dt) * z)
-        yield PriceTick(symbol="BTCUSDT", price=round(price, 2), timestamp_ms=ts, received_at_ms=ts)
+        price *= _math.exp(
+            (drift - 0.5 * annual_vol ** 2) * dt
+            + annual_vol * _math.sqrt(dt) * z
+        )
+        yield PriceTick(
+            symbol="BTCUSDT",
+            price=round(price, 2),
+            timestamp_ms=ts,
+            received_at_ms=ts,
+        )
         ts += tick_interval_ms
 
 

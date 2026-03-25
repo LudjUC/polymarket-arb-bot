@@ -1,0 +1,360 @@
+{"ts": "2026-03-25T21:45:21.845462+00:00", "level": "INFO", "logger": "simulator", "msg": "Bootstrapping BTC price via REST\u2026"}
+{"ts": "2026-03-25T21:45:22.229132+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "Bootstrapped BTC price: $71067.98"}
+{"ts": "2026-03-25T21:45:22.232177+00:00", "level": "INFO", "logger": "simulator", "msg": "Initial BTC price: $71067.98"}
+{"ts": "2026-03-25T21:45:22.233334+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connect attempt #1"}
+{"ts": "2026-03-25T21:45:22.233334+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed started"}
+{"ts": "2026-03-25T21:45:22.233334+00:00", "level": "INFO", "logger": "simulator", "msg": "WS feed started \u2014 waiting up to 5s for first live tick\u2026"}
+{"ts": "2026-03-25T21:45:22.874968+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:45:22.876992+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:45:22.877961+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:45:22.877961+00:00", "level": "WARNING", "logger": "simulator", "msg": "No short-term markets available. Simulation will run but generate no signals.\n  This is expected outside of high-vol periods.\n  Polymarket publishes daily/weekly BTC markets inconsistently.\n  Try: python debug_markets.py  to inspect what's available."}
+{"ts": "2026-03-25T21:45:22.879956+00:00", "level": "INFO", "logger": "simulator", "msg": "\u25b6  Running for 180s\u2026"}
+{"ts": "2026-03-25T21:45:23.042498+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connection established"}
+{"ts": "2026-03-25T21:45:37.283822+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  165s left | BTC=$71063.88 | ticks=17 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:45:52.891500+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  149s left | BTC=$71063.87 | ticks=28 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:46:11.417553+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  130s left | BTC=$71100.76 | ticks=54 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:46:23.343288+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:46:23.344285+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:46:23.344285+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:46:26.766730+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  115s left | BTC=$71104.21 | ticks=72 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:46:42.818132+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  99s left | BTC=$71082.74 | ticks=92 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:46:59.813488+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  82s left | BTC=$71068.01 | ticks=108 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:47:17.705495+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  64s left | BTC=$71050.50 | ticks=120 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:47:24.300923+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:47:24.302275+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:47:24.302494+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:47:32.974164+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  49s left | BTC=$71050.49 | ticks=129 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:47:48.459987+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  33s left | BTC=$71050.50 | ticks=140 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:48:03.565934+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  18s left | BTC=$71050.50 | ticks=150 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:48:19.812828+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  2s left | BTC=$71067.99 | ticks=161 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:48:21.880442+00:00", "level": "INFO", "logger": "simulator", "msg": "Simulation ended. Settling open trades at BTC=$71068.00"}
+{"ts": "2026-03-25T21:48:22.156243+00:00", "level": "WARNING", "logger": "data_ingestion", "msg": "WS closed: code=None msg=None"}
+{"ts": "2026-03-25T21:48:22.156243+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed stopped"}
+{"ts": "2026-03-25T21:51:13.986561+00:00", "level": "INFO", "logger": "simulator", "msg": "Bootstrapping BTC price via REST\u2026"}
+{"ts": "2026-03-25T21:51:14.346227+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "Bootstrapped BTC price: $71009.45"}
+{"ts": "2026-03-25T21:51:14.346227+00:00", "level": "INFO", "logger": "simulator", "msg": "Initial BTC price: $71009.45"}
+{"ts": "2026-03-25T21:51:14.361849+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connect attempt #1"}
+{"ts": "2026-03-25T21:51:14.361849+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed started"}
+{"ts": "2026-03-25T21:51:14.361849+00:00", "level": "INFO", "logger": "simulator", "msg": "WS feed started \u2014 waiting up to 5s for first live tick\u2026"}
+{"ts": "2026-03-25T21:51:14.892686+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:51:14.892686+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:51:14.892686+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:51:14.892686+00:00", "level": "WARNING", "logger": "simulator", "msg": "No short-term markets available. Simulation will run but generate no signals.\n  This is expected outside of high-vol periods.\n  Polymarket publishes daily/weekly BTC markets inconsistently.\n  Try: python debug_markets.py  to inspect what's available."}
+{"ts": "2026-03-25T21:51:14.892686+00:00", "level": "INFO", "logger": "simulator", "msg": "\u25b6  Running for 180s\u2026"}
+{"ts": "2026-03-25T21:51:15.389604+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connection established"}
+{"ts": "2026-03-25T21:51:31.734395+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  162s left | BTC=$71036.81 | ticks=15 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:51:49.810198+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  144s left | BTC=$71026.55 | ticks=27 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:52:04.832748+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  129s left | BTC=$71026.56 | ticks=32 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:52:15.455666+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:52:15.455666+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:52:15.455666+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:52:22.418774+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  112s left | BTC=$71024.72 | ticks=41 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:52:38.757857+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  95s left | BTC=$71026.54 | ticks=45 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:52:56.403884+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  78s left | BTC=$71038.33 | ticks=65 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:53:12.791772+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  61s left | BTC=$71042.00 | ticks=82 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:53:16.302203+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:53:16.307621+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:53:16.308619+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:53:28.458863+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  46s left | BTC=$71041.99 | ticks=89 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:53:44.716987+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  29s left | BTC=$71033.16 | ticks=100 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:54:00.255220+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  14s left | BTC=$71030.53 | ticks=109 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:54:14.020486+00:00", "level": "INFO", "logger": "simulator", "msg": "Simulation ended. Settling open trades at BTC=$71025.59"}
+{"ts": "2026-03-25T21:54:14.325274+00:00", "level": "WARNING", "logger": "data_ingestion", "msg": "WS closed: code=None msg=None"}
+{"ts": "2026-03-25T21:54:14.325274+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed stopped"}
+{"ts": "2026-03-25T21:57:07.096981+00:00", "level": "INFO", "logger": "simulator", "msg": "Bootstrapping BTC price via REST\u2026"}
+{"ts": "2026-03-25T21:57:07.455782+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "Bootstrapped BTC price: $71038.75"}
+{"ts": "2026-03-25T21:57:07.455782+00:00", "level": "INFO", "logger": "simulator", "msg": "Initial BTC price: $71038.75"}
+{"ts": "2026-03-25T21:57:07.455782+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connect attempt #1"}
+{"ts": "2026-03-25T21:57:07.471331+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed started"}
+{"ts": "2026-03-25T21:57:07.471331+00:00", "level": "INFO", "logger": "simulator", "msg": "WS feed started \u2014 waiting up to 5s for first live tick\u2026"}
+{"ts": "2026-03-25T21:57:08.065726+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:57:08.081382+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:57:08.081382+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:57:08.081382+00:00", "level": "WARNING", "logger": "simulator", "msg": "No short-term markets available. Simulation will run but generate no signals.\n  This is expected outside of high-vol periods.\n  Polymarket publishes daily/weekly BTC markets inconsistently.\n  Try: python debug_markets.py  to inspect what's available."}
+{"ts": "2026-03-25T21:57:08.081382+00:00", "level": "INFO", "logger": "simulator", "msg": "\u25b6  Running for 1900s\u2026"}
+{"ts": "2026-03-25T21:57:08.451283+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connection established"}
+{"ts": "2026-03-25T21:57:24.217020+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1883s left | BTC=$71031.35 | ticks=16 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:57:41.544154+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1866s left | BTC=$71024.51 | ticks=30 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:57:56.560680+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1851s left | BTC=$71024.50 | ticks=39 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:58:09.292365+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:58:09.294413+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:58:09.294663+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:58:15.639703+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1831s left | BTC=$71028.09 | ticks=55 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:58:31.244488+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1816s left | BTC=$71028.09 | ticks=69 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:58:47.306183+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1800s left | BTC=$71024.50 | ticks=80 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:59:02.763855+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1784s left | BTC=$71025.58 | ticks=94 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:59:11.538355+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T21:59:11.539355+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T21:59:11.540352+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T21:59:17.834030+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1769s left | BTC=$71042.00 | ticks=117 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:59:36.199737+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1751s left | BTC=$71035.25 | ticks=123 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T21:59:53.266157+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1734s left | BTC=$71035.25 | ticks=137 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:00:08.269548+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1719s left | BTC=$71046.38 | ticks=157 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:00:12.837330+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:00:12.839322+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:00:12.840295+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:00:24.220570+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1703s left | BTC=$71048.13 | ticks=173 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:00:39.325663+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1688s left | BTC=$71063.69 | ticks=199 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:00:54.330158+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1673s left | BTC=$71051.34 | ticks=217 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:01:09.830096+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1657s left | BTC=$71070.00 | ticks=236 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:01:13.773628+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:01:13.776339+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:01:13.776643+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:01:25.501155+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1642s left | BTC=$71066.88 | ticks=256 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:01:45.128542+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1622s left | BTC=$71066.89 | ticks=265 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:02:00.329342+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1607s left | BTC=$71086.78 | ticks=284 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:02:17.052773+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:02:17.054731+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:02:17.054731+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:02:17.054731+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1590s left | BTC=$71088.19 | ticks=298 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:02:32.207829+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1575s left | BTC=$71110.99 | ticks=328 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:02:49.161664+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1558s left | BTC=$71103.51 | ticks=346 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:03:04.812394+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1542s left | BTC=$71122.63 | ticks=368 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:03:17.689146+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:03:17.690317+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:03:17.691317+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:03:21.263607+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1526s left | BTC=$71138.93 | ticks=381 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:03:38.523595+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1509s left | BTC=$71110.98 | ticks=397 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:03:53.710892+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1493s left | BTC=$71103.18 | ticks=410 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:04:09.617137+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1477s left | BTC=$71084.00 | ticks=426 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:04:17.948824+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:04:17.951790+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:04:17.951790+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:04:24.792366+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1462s left | BTC=$71079.00 | ticks=466 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:04:39.909715+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1447s left | BTC=$71084.29 | ticks=494 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:04:56.047114+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1431s left | BTC=$71088.68 | ticks=508 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:05:12.076291+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1415s left | BTC=$71069.50 | ticks=531 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:05:19.591625+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:05:19.592764+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:05:19.593750+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:05:27.585101+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1400s left | BTC=$71090.89 | ticks=563 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:05:42.825238+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1384s left | BTC=$71085.20 | ticks=578 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:06:01.143800+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1366s left | BTC=$71085.20 | ticks=586 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:06:16.495814+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1351s left | BTC=$71087.94 | ticks=601 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:06:20.014446+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:06:20.015443+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:06:20.016440+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:06:32.458980+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1335s left | BTC=$71081.33 | ticks=618 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:06:54.999395+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1312s left | BTC=$71081.33 | ticks=634 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:07:10.206080+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1297s left | BTC=$71063.02 | ticks=661 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:07:22.428608+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:07:22.429571+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:07:22.429571+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:07:26.861235+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1280s left | BTC=$71049.99 | ticks=678 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:07:42.214513+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1265s left | BTC=$71000.01 | ticks=708 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:07:57.222564+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1250s left | BTC=$71010.58 | ticks=736 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:08:12.626831+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1234s left | BTC=$71012.03 | ticks=749 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:08:26.676799+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:08:26.676799+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:08:26.676799+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:08:28.487666+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1219s left | BTC=$71003.55 | ticks=766 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:08:43.628679+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1203s left | BTC=$71024.85 | ticks=788 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:09:01.938229+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1185s left | BTC=$71014.54 | ticks=802 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:09:17.086126+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1170s left | BTC=$71032.37 | ticks=819 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:09:28.665658+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:09:28.666819+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:09:28.666962+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:09:32.340881+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1155s left | BTC=$71008.87 | ticks=839 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:09:47.787433+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1139s left | BTC=$71006.21 | ticks=856 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:10:02.992765+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1124s left | BTC=$70974.99 | ticks=872 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:10:19.656234+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1107s left | BTC=$70995.82 | ticks=888 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:10:30.528504+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:10:30.532492+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:10:30.533490+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:10:35.881264+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1091s left | BTC=$70980.09 | ticks=913 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:10:51.455682+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1076s left | BTC=$70998.84 | ticks=930 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:11:06.471464+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1061s left | BTC=$70998.96 | ticks=962 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:11:21.603400+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1045s left | BTC=$70999.33 | ticks=973 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:11:31.034351+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:11:31.036350+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:11:31.036350+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:11:36.978087+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1030s left | BTC=$71020.63 | ticks=992 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:11:52.939611+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1014s left | BTC=$71015.66 | ticks=1005 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:12:08.177741+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  999s left | BTC=$71001.46 | ticks=1022 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:12:23.177999+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  984s left | BTC=$70997.17 | ticks=1034 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:12:31.743519+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:12:31.745454+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:12:31.745454+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:12:38.639614+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  968s left | BTC=$70997.17 | ticks=1048 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:12:53.985820+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  953s left | BTC=$70991.61 | ticks=1061 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:13:12.548804+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  935s left | BTC=$71019.19 | ticks=1086 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:13:27.792863+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  919s left | BTC=$71036.21 | ticks=1106 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:13:32.927050+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:13:32.928973+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:13:32.929274+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:13:42.848362+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  904s left | BTC=$71030.21 | ticks=1117 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:13:57.991427+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  889s left | BTC=$71026.01 | ticks=1129 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:14:13.636081+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  873s left | BTC=$71032.84 | ticks=1144 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:14:29.829746+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  857s left | BTC=$71027.00 | ticks=1159 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:14:33.925102+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:14:33.927097+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:14:33.927097+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:14:45.354355+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  842s left | BTC=$71008.01 | ticks=1180 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:15:01.412009+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  826s left | BTC=$70993.19 | ticks=1191 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:15:16.505807+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  811s left | BTC=$70990.00 | ticks=1204 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:15:31.518073+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  796s left | BTC=$70978.70 | ticks=1221 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:15:38.189749+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:15:38.199908+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:15:38.200908+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:15:47.822432+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  779s left | BTC=$70976.01 | ticks=1234 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:16:04.813614+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  762s left | BTC=$70974.43 | ticks=1244 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:16:21.680667+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  745s left | BTC=$70961.31 | ticks=1269 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:16:36.750244+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  730s left | BTC=$70947.62 | ticks=1290 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:16:38.915140+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:16:38.918374+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:16:38.918760+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:16:54.799127+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  712s left | BTC=$70963.76 | ticks=1310 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:17:10.407749+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  697s left | BTC=$70979.81 | ticks=1329 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:17:25.853906+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  681s left | BTC=$70988.29 | ticks=1343 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:17:39.183494+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:17:39.185490+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:17:39.185490+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:17:40.948491+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  666s left | BTC=$71000.82 | ticks=1362 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:17:56.753089+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  650s left | BTC=$71007.10 | ticks=1370 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:18:13.269322+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  634s left | BTC=$70988.94 | ticks=1383 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:18:31.520341+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  616s left | BTC=$70978.01 | ticks=1404 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:18:41.129174+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:18:41.131168+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:18:41.131168+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:18:46.687907+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  600s left | BTC=$70978.00 | ticks=1415 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:19:04.243614+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  583s left | BTC=$70990.49 | ticks=1429 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:19:19.305479+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  568s left | BTC=$70984.15 | ticks=1439 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:19:35.788207+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  551s left | BTC=$70993.37 | ticks=1451 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:19:41.591419+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:19:41.596405+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:19:41.596405+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:19:51.240801+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  536s left | BTC=$71002.15 | ticks=1465 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:20:06.243485+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  521s left | BTC=$71014.77 | ticks=1471 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:20:21.523015+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  506s left | BTC=$71014.78 | ticks=1480 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:20:37.183645+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  490s left | BTC=$71001.82 | ticks=1498 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:20:42.986447+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:20:42.986447+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:20:42.986447+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:20:54.597563+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  472s left | BTC=$70991.21 | ticks=1509 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:21:09.728905+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  457s left | BTC=$70991.72 | ticks=1521 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:21:24.859382+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  442s left | BTC=$70985.30 | ticks=1535 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:21:41.447301+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  426s left | BTC=$70998.97 | ticks=1544 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:21:44.611389+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:21:44.611389+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:21:44.611389+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:21:58.735746+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  408s left | BTC=$70992.91 | ticks=1559 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:22:14.673812+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  392s left | BTC=$70990.81 | ticks=1570 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:22:33.835929+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  373s left | BTC=$71014.10 | ticks=1594 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:22:44.941201+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:22:44.942854+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:22:44.943636+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:22:49.331125+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  358s left | BTC=$71028.95 | ticks=1612 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:23:04.707734+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  342s left | BTC=$71035.91 | ticks=1624 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:23:19.834795+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  327s left | BTC=$71024.57 | ticks=1639 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:23:36.057560+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  311s left | BTC=$71041.57 | ticks=1658 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:23:45.991994+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:23:45.993949+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:23:45.994272+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:23:53.306108+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  294s left | BTC=$71037.56 | ticks=1668 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:24:08.837006+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  278s left | BTC=$71030.43 | ticks=1680 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:24:25.062359+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  262s left | BTC=$71039.29 | ticks=1701 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:24:40.173347+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  247s left | BTC=$71034.84 | ticks=1709 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:24:46.818188+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:24:46.818188+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:24:46.818188+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:24:56.396965+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  231s left | BTC=$71038.63 | ticks=1721 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:25:17.810908+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  209s left | BTC=$71053.52 | ticks=1744 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:25:36.697888+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  190s left | BTC=$71053.53 | ticks=1755 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:25:48.696475+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:25:48.698437+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:25:48.698749+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:25:52.827456+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  174s left | BTC=$71056.85 | ticks=1765 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:26:08.114199+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  159s left | BTC=$71063.80 | ticks=1784 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:26:25.659047+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  141s left | BTC=$71085.83 | ticks=1799 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:26:41.986891+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  125s left | BTC=$71085.05 | ticks=1818 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:26:51.249560+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:26:51.252552+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:26:51.252552+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:26:59.072438+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  108s left | BTC=$71063.90 | ticks=1839 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:27:14.768887+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  92s left | BTC=$71045.93 | ticks=1857 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:27:30.579467+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  77s left | BTC=$71033.90 | ticks=1875 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:27:50.545109+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  57s left | BTC=$71039.13 | ticks=1882 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:27:51.647718+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:27:51.650707+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3062h)': 1}"}
+{"ts": "2026-03-25T22:27:51.650707+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:28:06.390586+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  41s left | BTC=$71053.52 | ticks=1903 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:28:26.304779+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  21s left | BTC=$71053.52 | ticks=1913 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:28:45.680687+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1s left | BTC=$71038.68 | ticks=1926 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:28:47.139604+00:00", "level": "INFO", "logger": "simulator", "msg": "Simulation ended. Settling open trades at BTC=$71038.68"}
+{"ts": "2026-03-25T22:28:47.426431+00:00", "level": "WARNING", "logger": "data_ingestion", "msg": "WS closed: code=None msg=None"}
+{"ts": "2026-03-25T22:28:47.428438+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed stopped"}
+{"ts": "2026-03-25T22:35:27.206910+00:00", "level": "INFO", "logger": "simulator", "msg": "Bootstrapping BTC price via REST\u2026"}
+{"ts": "2026-03-25T22:35:27.585254+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "Bootstrapped BTC price: $71209.50"}
+{"ts": "2026-03-25T22:35:27.585254+00:00", "level": "INFO", "logger": "simulator", "msg": "Initial BTC price: $71209.50"}
+{"ts": "2026-03-25T22:35:27.585254+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connect attempt #1"}
+{"ts": "2026-03-25T22:35:27.585254+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed started"}
+{"ts": "2026-03-25T22:35:27.585254+00:00", "level": "INFO", "logger": "simulator", "msg": "WS feed started \u2014 waiting up to 5s for first live tick\u2026"}
+{"ts": "2026-03-25T22:35:28.283743+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:35:28.285766+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:35:28.286736+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:35:28.286736+00:00", "level": "WARNING", "logger": "simulator", "msg": "No short-term markets available. Simulation will run but generate no signals.\n  This is expected outside of high-vol periods.\n  Polymarket publishes daily/weekly BTC markets inconsistently.\n  Try: python debug_markets.py  to inspect what's available."}
+{"ts": "2026-03-25T22:35:28.286736+00:00", "level": "INFO", "logger": "simulator", "msg": "\u25b6  Running for 1900s\u2026"}
+{"ts": "2026-03-25T22:35:28.675985+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connection established"}
+{"ts": "2026-03-25T22:35:42.684014+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1885s left | BTC=$71194.10 | ticks=17 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:36:01.858664+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1865s left | BTC=$71193.04 | ticks=25 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:36:16.888877+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1850s left | BTC=$71198.96 | ticks=41 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:36:28.633423+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:36:28.635446+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:36:28.635446+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:36:31.911269+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1835s left | BTC=$71215.99 | ticks=59 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:36:48.542808+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1819s left | BTC=$71258.22 | ticks=93 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:37:04.611275+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1803s left | BTC=$71287.10 | ticks=129 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:37:20.053778+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1787s left | BTC=$71340.80 | ticks=162 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:37:34.252371+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:37:34.254568+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:37:34.254568+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:37:35.921288+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1771s left | BTC=$71327.01 | ticks=179 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:37:51.129766+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1756s left | BTC=$71300.65 | ticks=197 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:38:06.275269+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1741s left | BTC=$71274.79 | ticks=220 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:38:22.556970+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1725s left | BTC=$71265.16 | ticks=246 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:38:35.858283+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:38:35.859828+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:38:35.859828+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:38:42.262257+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1705s left | BTC=$71266.86 | ticks=262 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:39:02.120889+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1685s left | BTC=$71271.94 | ticks=282 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:39:19.943081+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1667s left | BTC=$71258.81 | ticks=310 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:39:38.927577+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:39:38.929544+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:39:38.929544+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:39:38.930655+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1648s left | BTC=$71258.53 | ticks=324 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:39:57.171583+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1630s left | BTC=$71244.36 | ticks=337 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:40:13.680115+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1614s left | BTC=$71236.01 | ticks=353 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:40:29.927142+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1597s left | BTC=$71241.98 | ticks=363 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:40:39.749544+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:40:39.749544+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:40:39.749544+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:40:45.249132+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1582s left | BTC=$71244.34 | ticks=379 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:41:01.837402+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1565s left | BTC=$71244.35 | ticks=386 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:41:20.787602+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1546s left | BTC=$71233.10 | ticks=395 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:41:35.911775+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1531s left | BTC=$71233.11 | ticks=408 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:41:43.036124+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:41:43.036784+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:41:43.037161+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:41:51.864721+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1515s left | BTC=$71313.71 | ticks=432 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:42:06.941264+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1500s left | BTC=$71490.99 | ticks=552 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:42:23.018783+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1484s left | BTC=$71370.88 | ticks=617 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:42:39.354216+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1468s left | BTC=$71334.94 | ticks=660 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:42:43.980300+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API: 100 unique BTC markets"}
+{"ts": "2026-03-25T22:42:43.980300+00:00", "level": "WARNING", "logger": "market_parser", "msg": "0 short-term BTC markets found. Rejection summary: {'not_btc': 99, 'too_long_term(3061h)': 1}"}
+{"ts": "2026-03-25T22:42:43.980300+00:00", "level": "WARNING", "logger": "market_parser", "msg": "This is expected if Polymarket has no markets expiring within 72 hours right now. Try running during high-volatility periods when daily/weekly resolution markets are active."}
+{"ts": "2026-03-25T22:42:46.998129+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:54.686117+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1453s left | BTC=$71324.44 | ticks=705 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:42:55.894581+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:56.080341+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:56.237251+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:56.383375+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:56.529385+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:56.685029+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:56.851328+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:57.018576+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:57.185242+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:57.346020+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:57.507078+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:42:57.674441+00:00", "level": "INFO", "logger": "main", "msg": "Shutdown signal received (2). Draining\u2026"}
+{"ts": "2026-03-25T22:43:11.374269+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1436s left | BTC=$71324.44 | ticks=723 sigs=0 trades=0 open=0 pnl=$+0.00"}
+{"ts": "2026-03-25T22:43:27.004547+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  1420s left | BTC=$71341.31 | ticks=745 sigs=0 trades=0 open=0 pnl=$+0.00"}

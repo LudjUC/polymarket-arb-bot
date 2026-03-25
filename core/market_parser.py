@@ -262,15 +262,36 @@ class MarketParser:
         """Fetch and parse markets. Call periodically from main loop."""
         raw_markets = self._client.search_btc_markets()
         parsed = []
+        rejected = 0
         for raw in raw_markets:
             mc = self._parse_market(raw)
             if mc:
                 self._markets[mc.market_id] = mc
                 parsed.append(mc)
+            else:
+                rejected += 1
 
         self._last_refresh = time.time()
         METRICS.gauge("active_markets", len(parsed))
-        log.info("Parsed %d actionable BTC markets", len(parsed))
+
+        if parsed:
+            log.info(
+                "Loaded %d tradeable BTC markets (%d rejected). "
+                "Run `python debug_markets.py` to see rejection reasons.",
+                len(parsed), rejected,
+            )
+            for mc in parsed:
+                log.info(
+                    "  ✓ [%s]  yes=%.3f  liq=$%.0f  %s",
+                    mc.condition_type, mc.yes_price, mc.liquidity_usd,
+                    mc.question[:65],
+                )
+        else:
+            log.warning(
+                "0 tradeable BTC markets from %d returned. "
+                "All %d were rejected. Run `python debug_markets.py` for details.",
+                len(raw_markets), rejected,
+            )
         return parsed
 
     def get_markets(self) -> List[MarketCondition]:
@@ -282,76 +303,120 @@ class MarketParser:
 
     # ------------------------------------------------------------------
     def _parse_market(self, raw: Dict) -> Optional[MarketCondition]:
+        """
+        Parse one raw Gamma API market dict into a MarketCondition.
+
+        Handles every Polymarket schema variant observed in the wild:
+          - tokens as a JSON string or a list
+          - outcomePrices as a JSON string or a list
+          - prices embedded in token dicts OR in outcomePrices
+          - outcomes named "Yes"/"No", "YES"/"NO", or positional [0]=yes [1]=no
+          - binary markets with exactly 2 outcomes
+          - missing / zero expiry dates
+          - liquidity as a string float or a number
+        """
+        import json as _json
+
         question = raw.get("question", "")
-        # Quick filter: must mention BTC / Bitcoin
         if not any(w in question.lower() for w in ["btc", "bitcoin"]):
             return None
 
         threshold, ctype = _parse_threshold(question)
         if threshold is None:
-            log.debug("No threshold parsed from: %r", question[:80])
+            log.debug("No threshold parsed: %r", question[:80])
 
-        # --- Resolve market ID (Gamma uses several field names)
+        # ── market ID ────────────────────────────────────────────────
         market_id = (
-            raw.get("id")
-            or raw.get("conditionId")
-            or raw.get("condition_id")
+            str(raw.get("id", ""))
+            or str(raw.get("conditionId", ""))
+            or str(raw.get("condition_id", ""))
             or ""
         )
 
-        # --- Resolve tokens
-        # Gamma v2 embeds tokens as a JSON string in "tokens" field or a list
+        # ── tokens ───────────────────────────────────────────────────
         tokens_raw = raw.get("tokens", [])
         if isinstance(tokens_raw, str):
-            import json as _json
             try:
                 tokens_raw = _json.loads(tokens_raw)
             except Exception:
                 tokens_raw = []
-
         tokens: List[Dict] = tokens_raw if isinstance(tokens_raw, list) else []
 
-        yes_token = next((t for t in tokens if t.get("outcome", "").lower() == "yes"), None)
-        no_token = next((t for t in tokens if t.get("outcome", "").lower() == "no"), None)
+        # Strategy 1: match by outcome label "yes"/"no"
+        yes_token = next(
+            (t for t in tokens if str(t.get("outcome", "")).lower() == "yes"), None
+        )
+        no_token = next(
+            (t for t in tokens if str(t.get("outcome", "")).lower() == "no"), None
+        )
+
+        # Strategy 2: positional — Polymarket binary markets always put YES first
+        if (not yes_token or not no_token) and len(tokens) == 2:
+            yes_token = tokens[0]
+            no_token  = tokens[1]
+
+        # Strategy 3: synthesise minimal token dicts from outcomes / outcomePrices
+        outcomes_raw = raw.get("outcomes", "[]")
+        if isinstance(outcomes_raw, str):
+            try:
+                outcomes_raw = _json.loads(outcomes_raw)
+            except Exception:
+                outcomes_raw = []
+
+        if (not yes_token or not no_token) and isinstance(outcomes_raw, list) and len(outcomes_raw) >= 2:
+            yes_token = {"outcome": outcomes_raw[0], "token_id": "", "price": 0}
+            no_token  = {"outcome": outcomes_raw[1], "token_id": "", "price": 0}
 
         if not yes_token or not no_token:
+            log.debug("Skipping market %s — no YES/NO tokens: %r", market_id[:12], question[:60])
             return None
 
-        # --- Resolve prices
-        # Gamma embeds prices in token dicts OR in a parallel "outcomePrices" array
+        # ── prices ───────────────────────────────────────────────────
+        # Try outcomePrices array first (most reliable source in Gamma v2)
         outcome_prices_raw = raw.get("outcomePrices", "[]")
         if isinstance(outcome_prices_raw, str):
-            import json as _json
             try:
-                outcome_prices = [float(p) for p in _json.loads(outcome_prices_raw)]
+                op = [float(p) for p in _json.loads(outcome_prices_raw)]
             except Exception:
-                outcome_prices = []
+                op = []
         elif isinstance(outcome_prices_raw, list):
             try:
-                outcome_prices = [float(p) for p in outcome_prices_raw]
+                op = [float(p) for p in outcome_prices_raw]
             except Exception:
-                outcome_prices = []
+                op = []
         else:
-            outcome_prices = []
+            op = []
 
-        yes_price = float(yes_token.get("price", 0) or 0)
-        no_price  = float(no_token.get("price", 0) or 0)
+        # outcomePrices[0] = YES, outcomePrices[1] = NO (Polymarket convention)
+        yes_price = op[0] if len(op) >= 1 else 0.0
+        no_price  = op[1] if len(op) >= 2 else 0.0
 
-        # Fall back to outcomePrices array [yes_price, no_price]
-        if yes_price == 0.0 and len(outcome_prices) >= 2:
-            yes_price = outcome_prices[0]
-            no_price  = outcome_prices[1]
+        # Fall back to per-token price field
+        if yes_price == 0.0:
+            yes_price = float(yes_token.get("price", 0) or 0)
+        if no_price == 0.0:
+            no_price = float(no_token.get("price", 0) or 0)
 
-        # Sanity check: prices should roughly sum to ~1 (allowing spread)
-        if yes_price + no_price > 0 and not (0.8 <= yes_price + no_price <= 1.2):
+        # Last resort: if we have one price, infer the other
+        if yes_price > 0 and no_price == 0.0:
+            no_price = round(1.0 - yes_price, 4)
+        elif no_price > 0 and yes_price == 0.0:
+            yes_price = round(1.0 - no_price, 4)
+
+        if yes_price + no_price > 0 and not (0.80 <= yes_price + no_price <= 1.20):
             log.debug(
-                "Suspicious prices for market %s: yes=%.3f no=%.3f",
-                market_id, yes_price, no_price,
+                "Suspicious price sum for %s: yes=%.3f no=%.3f sum=%.3f",
+                market_id[:12], yes_price, no_price, yes_price + no_price,
             )
 
-        liquidity = float(raw.get("liquidity", 0) or 0)
+        # ── liquidity ────────────────────────────────────────────────
+        liq_raw = raw.get("liquidity", 0) or raw.get("volume", 0) or 0
+        try:
+            liquidity = float(liq_raw)
+        except (TypeError, ValueError):
+            liquidity = 0.0
 
-        # --- Resolve expiry
+        # ── expiry ───────────────────────────────────────────────────
         expiry_field = (
             raw.get("endDate")
             or raw.get("end_date_iso")
@@ -367,9 +432,29 @@ class MarketParser:
             expiry_ts=_parse_expiry(expiry_field),
             yes_price=yes_price,
             no_price=no_price,
-            yes_token_id=yes_token.get("token_id", ""),
-            no_token_id=no_token.get("token_id", ""),
+            yes_token_id=str(yes_token.get("token_id", "") or ""),
+            no_token_id=str(no_token.get("token_id", "") or ""),
             liquidity_usd=liquidity,
             raw=raw,
         )
-        return mc if mc.tradeable else None
+
+        if not mc.tradeable:
+            # Log the specific reason so we can tune config.py thresholds
+            reasons = []
+            if mc.expiry_ts != 0 and mc.is_expired:
+                reasons.append("expired")
+            elif mc.expiry_ts != 0 and mc.seconds_to_expiry < CONFIG.polymarket.min_time_to_expiry_s:
+                reasons.append(f"expiry_too_soon({mc.seconds_to_expiry/60:.0f}m)")
+            if not mc.has_sufficient_liquidity:
+                reasons.append(f"low_liquidity(${liquidity:.0f})")
+            if yes_price <= 0:
+                reasons.append("yes_price_zero")
+            if no_price <= 0:
+                reasons.append("no_price_zero")
+            log.debug(
+                "Not tradeable [%s]: %s | %r",
+                market_id[:12], ", ".join(reasons) or "unknown", question[:60],
+            )
+            return None
+
+        return mc

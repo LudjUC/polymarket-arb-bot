@@ -217,35 +217,37 @@ class ConditionEngine:
         """
         For markets that haven't expired yet and the condition is met NOW,
         there is still residual uncertainty that price reverses before expiry.
-        
-        We apply a small discount based on:
-        - Time to expiry (more time = more chance of reversal)
-        - Distance from threshold (further = less reversal risk)
-        
-        This is a simplistic model — a real system would use BTC volatility
-        estimates (e.g., realised vol) to price this properly.
-        
-        NOTE: This discount makes us MORE conservative (better for risk management).
+
+        Skip when expiry_ts == 0 (unknown end date).
+        Cap: max discount is 15% to avoid over-penalising long-dated markets.
         """
         if not result.is_definitive or result.implied_certainty < 0.5:
             return result
 
-        tte_hours = market.seconds_to_expiry / 3600
-        # Approximate: each hour of exposure reduces certainty slightly
+        # Unknown expiry — no time-based discount
+        if market.expiry_ts == 0:
+            return result
+
+        tte_hours = max(0.0, market.seconds_to_expiry / 3600)
+        if tte_hours <= 0:
+            return result
+
         # Annualised BTC vol ~70%, hourly vol ≈ 70% / sqrt(8760) ≈ 0.75%/hour
         hourly_vol_estimate = 0.0075
-        # 1σ reversal probability (very rough)
+
         if market.threshold_usd and result.current_btc_price:
             distance_pct = abs(result.current_btc_price - market.threshold_usd) / market.threshold_usd
-            # Probability of reversal ~ N(−d/σ√T)
             sigma_T = hourly_vol_estimate * math.sqrt(tte_hours)
             if sigma_T > 0:
                 z = distance_pct / sigma_T
-                # CDF approximation: probability of NOT reversing
                 reversal_prob = _standard_normal_cdf(-z)
-                adjusted_certainty = result.implied_certainty * (1 - reversal_prob * 0.5)
-                result.implied_certainty = max(0.0, min(1.0, adjusted_certainty))
-                result.notes += f" | TTE={tte_hours:.1f}h discount applied"
+                discount = min(reversal_prob * 0.5, 0.15)   # cap at 15%
+                before = result.implied_certainty
+                result.implied_certainty = max(0.0, min(1.0, before * (1 - discount)))
+                result.notes += (
+                    f" | TTE={tte_hours:.0f}h dist={distance_pct:.2%} "
+                    f"certainty {before:.3f}→{result.implied_certainty:.3f}"
+                )
 
         return result
 

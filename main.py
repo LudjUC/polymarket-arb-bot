@@ -253,7 +253,18 @@ def main() -> None:
         action="store_true",
         help="(live mode) Print signals only, do not place orders",
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Set log level to DEBUG (shows market rejection reasons)",
+    )
     args = parser.parse_args()
+
+    if args.debug:
+        import logging
+        logging.getLogger().setLevel(logging.DEBUG)
+        for name in ("market_parser", "signal_generator", "condition_engine", "pricing_engine"):
+            logging.getLogger(name).setLevel(logging.DEBUG)
 
     if args.mode == "generate-data":
         generate_sample_csv()

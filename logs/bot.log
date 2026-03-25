@@ -1,0 +1,22 @@
+{"ts": "2026-03-25T21:07:46.326599+00:00", "level": "INFO", "logger": "simulator", "msg": "Bootstrapping BTC price via REST\u2026"}
+{"ts": "2026-03-25T21:07:46.744911+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "Bootstrapped BTC price: $70990.41"}
+{"ts": "2026-03-25T21:07:46.745920+00:00", "level": "INFO", "logger": "simulator", "msg": "Initial BTC price: $70990.41"}
+{"ts": "2026-03-25T21:07:46.746908+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connect attempt #1"}
+{"ts": "2026-03-25T21:07:46.746908+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed started"}
+{"ts": "2026-03-25T21:07:46.746908+00:00", "level": "INFO", "logger": "simulator", "msg": "WebSocket feed started. Waiting up to 5s for first live tick\u2026"}
+{"ts": "2026-03-25T21:07:46.747905+00:00", "level": "INFO", "logger": "simulator", "msg": "Fetching real Polymarket BTC markets\u2026"}
+{"ts": "2026-03-25T21:07:47.335447+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API returned 100 unique BTC-related markets"}
+{"ts": "2026-03-25T21:07:47.337442+00:00", "level": "INFO", "logger": "market_parser", "msg": "Parsed 0 actionable BTC markets"}
+{"ts": "2026-03-25T21:07:47.338440+00:00", "level": "INFO", "logger": "simulator", "msg": "Loaded 0 tradeable BTC markets from Polymarket"}
+{"ts": "2026-03-25T21:07:47.338440+00:00", "level": "WARNING", "logger": "simulator", "msg": "No tradeable markets found \u2014 API may be rate-limiting or all markets lack sufficient liquidity/time-to-expiry. Proceeding with empty market set."}
+{"ts": "2026-03-25T21:07:47.338440+00:00", "level": "INFO", "logger": "simulator", "msg": "\u25b6  Live simulation running for 60 seconds\u2026"}
+{"ts": "2026-03-25T21:07:47.725149+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "WS connection established"}
+{"ts": "2026-03-25T21:08:01.344101+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  45s remaining | BTC=$71003.62 | ticks=8 signals=0 trades=0"}
+{"ts": "2026-03-25T21:08:17.622738+00:00", "level": "INFO", "logger": "market_parser", "msg": "Gamma API returned 100 unique BTC-related markets"}
+{"ts": "2026-03-25T21:08:17.623759+00:00", "level": "INFO", "logger": "market_parser", "msg": "Parsed 0 actionable BTC markets"}
+{"ts": "2026-03-25T21:08:17.624181+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  29s remaining | BTC=$71001.29 | ticks=27 signals=0 trades=0"}
+{"ts": "2026-03-25T21:08:33.450443+00:00", "level": "INFO", "logger": "simulator", "msg": "\u23f1  13s remaining | BTC=$71004.29 | ticks=40 signals=0 trades=0"}
+{"ts": "2026-03-25T21:08:46.727784+00:00", "level": "WARNING", "logger": "data_ingestion", "msg": "WS closed: code=None msg=None"}
+{"ts": "2026-03-25T21:08:46.728783+00:00", "level": "INFO", "logger": "data_ingestion", "msg": "BinanceWebSocketFeed stopped"}
+{"ts": "2026-03-25T21:08:46.728783+00:00", "level": "INFO", "logger": "simulator", "msg": "Feed stopped. Settling trades\u2026"}
+{"ts": "2026-03-25T21:08:46.728783+00:00", "level": "INFO", "logger": "simulator", "msg": "Final BTC price for settlement: $71023.31"}

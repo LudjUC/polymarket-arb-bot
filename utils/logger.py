@@ -55,16 +55,17 @@ def get_logger(name: str) -> logging.Logger:
     )
     fh.setLevel(cfg.log_level)
 
-    if cfg.json_logs:
-        fmt = JsonFormatter()
-    else:
-        fmt = logging.Formatter(
-            "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s",
-            datefmt="%Y-%m-%dT%H:%M:%S",
-        )
+    # File handler always gets JSON for machine-readable archiving
+    fh.setFormatter(JsonFormatter())
 
-    ch.setFormatter(fmt)
-    fh.setFormatter(fmt)
+    # Console gets human-readable format regardless of json_logs setting
+    # — JSON on a terminal is unreadable during live simulation
+    console_fmt = logging.Formatter(
+        "%(asctime)s | %(levelname)-8s | %(name)-18s | %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    ch.setFormatter(console_fmt)
+
     logger.addHandler(ch)
     logger.addHandler(fh)
     return logger
@@ -129,7 +130,8 @@ class Ledger:
             **signal,
         }
         self._append(entry)
-        self._log.warning("Missed opportunity: %s", reason, extra={"_market_id": signal.get("market_id")})
+        # DEBUG only — suppressed from console to avoid per-tick spam
+        self._log.debug("Missed opportunity: %s", reason, extra={"_market_id": signal.get("market_id")})
 
     def summary(self) -> Dict:
         total_pnl = sum(t.get("realised_pnl_usd", 0.0) for t in self.trades)

@@ -90,8 +90,11 @@ class SignalGenerator:
         self._capital_available = capital_available_usd
         self._signal_counter = 0
         # Dedup: don't re-emit the same signal within N seconds
-        self._recent_signals: dict[str, float] = {}  # market_id → timestamp
+        self._recent_signals: dict[str, float] = {}   # market_id → last signal ts
         self._dedup_window_s: float = 60.0
+        # Missed-opportunity cooldown: only write to ledger once per market per window
+        self._missed_cooldown: dict[str, float] = {}  # market_id → last missed ts
+        self._missed_cooldown_s: float = 60.0
 
     # ------------------------------------------------------------------
 
@@ -153,12 +156,17 @@ class SignalGenerator:
             return None
 
         if not analysis.is_actionable:
-            # Log why we're skipping (useful for simulation analysis)
+            # Rate-limit missed-opportunity ledger writes to once per market per window
+            # to prevent per-tick log spam during live simulation.
             if analysis.raw_edge > 0:
-                LEDGER.record_missed(
-                    reason=f"net_edge={analysis.net_edge:.3f} < min or certainty too low",
-                    signal={"market_id": market.market_id, "net_edge": analysis.net_edge},
-                )
+                now = time.time()
+                last_missed = self._missed_cooldown.get(market.market_id, 0)
+                if now - last_missed >= self._missed_cooldown_s:
+                    self._missed_cooldown[market.market_id] = now
+                    LEDGER.record_missed(
+                        reason=f"net_edge={analysis.net_edge:.3f} below threshold or certainty too low",
+                        signal={"market_id": market.market_id, "net_edge": analysis.net_edge},
+                    )
             return None
 
         # --- Build signal

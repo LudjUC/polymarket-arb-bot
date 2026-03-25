@@ -30,9 +30,9 @@ class PolymarketConfig:
     # How often to refresh market list (seconds)
     market_refresh_interval_s: float = 30.0
     # Only consider markets with at least this much open interest (USD)
-    min_market_liquidity_usd: float = 5_000.0
+    min_market_liquidity_usd: float = 500.0
     # Ignore markets expiring within N seconds (too close to resolve)
-    min_time_to_expiry_s: float = 3600.0
+    min_time_to_expiry_s: float = 600.0
 
 
 @dataclass
@@ -41,14 +41,14 @@ class SignalConfig:
     # Polymarket taker fee ~ 2% of notional
     taker_fee_fraction: float = 0.02
     # Safety margin on top of fees (slippage, model error, etc.)
-    safety_margin: float = 0.03
-    # Minimum raw edge = fees + safety_margin = 0.05 by default
+    safety_margin: float = 0.02
+    # Minimum raw edge = fees + safety_margin = 0.04 by default
     @property
     def min_edge(self) -> float:
         return self.taker_fee_fraction + self.safety_margin
 
     # Only trade when implied certainty (based on real-world data) > this
-    min_implied_certainty: float = 0.90
+    min_implied_certainty: float = 0.85
 
 
 @dataclass
@@ -80,8 +80,8 @@ class LoggingConfig:
     # Rotate log files daily
     rotate_when: str = "midnight"
     backup_count: int = 30
-    # Structured JSON logs for machine parsing
-    json_logs: bool = True
+    # Human-readable on console; set True if piping to a log aggregator
+    json_logs: bool = False
 
 
 @dataclass

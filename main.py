@@ -39,8 +39,6 @@ from core.signal_generator import SignalGenerator, TradeSignal
 from core.simulator import (
     Simulator,
     generate_sample_csv,
-    generate_synthetic_ticks,
-    ticks_from_csv,
 )
 from utils.logger import get_logger, LEDGER
 from utils.metrics import METRICS
@@ -130,82 +128,30 @@ def run_live(execute: bool = True) -> None:
 
 
 # ------------------------------------------------------------------
-# Simulation mode
+# Simulation mode  (live time-based window with real data)
 # ------------------------------------------------------------------
 
-def run_simulation(
-    data_path: Optional[str] = None,
-    max_ticks: Optional[int] = None,
-) -> None:
-    log.info("=" * 60)
-    log.info("  Polymarket Arb Bot — SIMULATION MODE")
-    log.info("=" * 60)
+def run_simulation(duration_s: float = 180.0) -> None:
+    """
+    Run a live simulation for `duration_s` seconds (default 3 minutes).
+      - Real BTC prices from Binance WebSocket
+      - Real Polymarket BTC markets from Gamma API
+      - Simulated fills with slippage (no real money)
+      - WIN/LOSS settled against final BTC price at end of window
+    """
+    minutes = int(duration_s // 60)
+    secs    = int(duration_s % 60)
+    dur_str = f"{minutes}m {secs:02d}s" if secs else f"{minutes}m"
 
-    # Create some test markets with BTC thresholds near typical prices
-    # In production, load these from a real Polymarket snapshot
-    from core.market_parser import MarketCondition
-    import time as _time
+    print("\n" + "═" * 65)
+    print("   🚀  POLYMARKET ARB BOT — LIVE SIMULATION MODE")
+    print(f"   Duration : {dur_str}  |  Real data  |  No real money")
+    print("   Feed     : Binance WebSocket (BTC/USDT)")
+    print("   Markets  : Polymarket Gamma API (live)")
+    print("═" * 65 + "\n")
 
-    test_markets = [
-        MarketCondition(
-            market_id="test_market_80k",
-            question="Will Bitcoin reach $80,000 before end of Q1 2025?",
-            condition_type="price_above",
-            threshold_usd=80_000.0,
-            expiry_ts=int(_time.time()) + 86400 * 30,
-            yes_price=0.62,  # Polymarket prices YES at 62 cents
-            no_price=0.38,
-            yes_token_id="token_yes_80k",
-            no_token_id="token_no_80k",
-            liquidity_usd=25_000.0,
-            raw={},
-        ),
-        MarketCondition(
-            market_id="test_market_100k",
-            question="Will BTC exceed $100,000 in 2025?",
-            condition_type="price_above",
-            threshold_usd=100_000.0,
-            expiry_ts=int(_time.time()) + 86400 * 90,
-            yes_price=0.45,
-            no_price=0.55,
-            yes_token_id="token_yes_100k",
-            no_token_id="token_no_100k",
-            liquidity_usd=50_000.0,
-            raw={},
-        ),
-        MarketCondition(
-            market_id="test_market_70k_below",
-            question="Will Bitcoin fall below $70,000 before June 2025?",
-            condition_type="price_below",
-            threshold_usd=70_000.0,
-            expiry_ts=int(_time.time()) + 86400 * 60,
-            yes_price=0.20,
-            no_price=0.80,
-            yes_token_id="token_yes_70k_low",
-            no_token_id="token_no_70k_low",
-            liquidity_usd=15_000.0,
-            raw={},
-        ),
-    ]
-
-    sim = Simulator(markets=test_markets)
-
-    if data_path:
-        log.info("Loading historical data from %s", data_path)
-        tick_source = ticks_from_csv(data_path)
-    else:
-        log.info("No data path given — using synthetic GBM ticks (start=$85,000)")
-        tick_source = generate_synthetic_ticks(
-            start_price=85_000.0,
-            n_ticks=max_ticks or 5_000,
-        )
-
-    result = sim.run(
-        tick_source=tick_source,
-        max_ticks=max_ticks,
-        playback_delay_s=0.0,  # run as fast as possible
-    )
-
+    sim = Simulator(duration_s=duration_s)
+    result = sim.run()   # always uses live WS path when tick_source=None
     result.print_summary()
     _print_final_summary()
 
@@ -259,14 +205,18 @@ def _print_signal(sig: TradeSignal) -> None:
 def _print_final_summary() -> None:
     summary = LEDGER.summary()
     metrics_snap = METRICS.snapshot()
-    print("\n" + "=" * 60)
-    print("  FINAL SUMMARY")
-    print("=" * 60)
-    for k, v in summary.items():
-        print(f"  {k}: {v}")
-    print(f"  ws_reconnects: {metrics_snap['counters'].get('ws_reconnects', 0)}")
-    print(f"  api_errors: {metrics_snap['counters'].get('api_errors', 0)}")
-    print("=" * 60 + "\n")
+    print("─" * 65)
+    print("  LEDGER TOTALS")
+    print(f"  Signals recorded:  {summary['total_signals']}")
+    print(f"  Trades recorded:   {summary['total_trades']}")
+    print(f"  Realised PnL:      ${summary['total_realised_pnl_usd']:+.4f}")
+    ws_reconnects = int(metrics_snap["counters"].get("ws_reconnects", 0))
+    api_errors = int(metrics_snap["counters"].get("api_errors", 0))
+    if ws_reconnects:
+        print(f"  WS reconnects:     {ws_reconnects}")
+    if api_errors:
+        print(f"  API errors:        {api_errors}")
+    print("─" * 65 + "\n")
 
 
 # ------------------------------------------------------------------
@@ -274,41 +224,46 @@ def _print_final_summary() -> None:
 # ------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Polymarket Arbitrage Bot")
+    parser = argparse.ArgumentParser(
+        description="Polymarket Arbitrage Bot",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  python main.py --mode simulate              # 3-min live sim\n"
+            "  python main.py --mode simulate --duration 60  # 1-min live sim\n"
+            "  python main.py --mode live --no-execute     # live signals, no orders\n"
+            "  python main.py --mode generate-data         # write sample CSV\n"
+        ),
+    )
     parser.add_argument(
         "--mode",
         choices=["live", "simulate", "generate-data"],
         default="simulate",
-        help="Operating mode",
+        help="Operating mode (default: simulate)",
     )
     parser.add_argument(
-        "--data",
-        default=None,
-        help="Path to historical BTC price CSV (simulate mode)",
+        "--duration",
+        type=float,
+        default=180.0,
+        metavar="SECONDS",
+        help="Simulation window in seconds (default: 180 = 3 min)",
     )
     parser.add_argument(
         "--no-execute",
         action="store_true",
-        help="Print signals only, do not place orders",
-    )
-    parser.add_argument(
-        "--max-ticks",
-        type=int,
-        default=None,
-        help="Maximum ticks to process (simulation mode)",
+        help="(live mode) Print signals only, do not place orders",
     )
     args = parser.parse_args()
 
     if args.mode == "generate-data":
         generate_sample_csv()
-        log.info("Sample data generated. Re-run with --mode simulate --data data/historical/btc_prices.csv")
+        log.info("Sample CSV written. Use --mode simulate to run live simulation.")
         sys.exit(0)
 
     elif args.mode == "simulate":
-        run_simulation(data_path=args.data, max_ticks=args.max_ticks)
+        run_simulation(duration_s=args.duration)
 
     elif args.mode == "live":
-        # Force simulation_mode=True unless user explicitly opts out via config
         run_live(execute=not args.no_execute)
 
 

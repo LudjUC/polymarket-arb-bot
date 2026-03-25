@@ -1,14 +1,12 @@
 """
-core/pricing_engine.py — Compare Polymarket prices vs implied certainty,
-compute edge, expected value, and Kelly-optimal position size.
+core/pricing_engine.py — Edge calculation and position sizing.
 
-Key concepts:
-  - Market price (p): Polymarket's current YES token price
-  - Implied certainty (q): Our estimate of the true probability from real-world data
-  - Edge: q - p  (positive = market is underpricing the outcome)
-  - Net edge: edge - fees - safety_margin
-  - EV: net_edge × position_size
-  - Kelly size: f* = (q × b - (1-q)) / b  where b = (1/p) - 1
+Key changes from previous version:
+  - Signal logic driven by config thresholds (buy_yes_max_price, buy_no_min_yes_price)
+    NOT by min_implied_certainty being artificially high.
+  - Edge = (implied_certainty - market_price) after fees.
+  - Only actionable when edge > min_edge (default 0.10) after fees.
+  - NO fake certainty. NO instant resolution.
 """
 
 from dataclasses import dataclass
@@ -27,30 +25,26 @@ log = get_logger("pricing_engine")
 class PricingAnalysis:
     market_id: str
     question: str
-    target_outcome: str         # "YES" or "NO"
-    market_price: float         # Polymarket token price
-    implied_certainty: float    # Our estimate
-    raw_edge: float             # implied_certainty - market_price
-    fee_cost: float             # estimated round-trip fee fraction
-    safety_margin: float        # configured safety buffer
-    net_edge: float             # raw_edge - fee_cost - safety_margin
-    kelly_fraction: float       # raw Kelly fraction (before fractional scaling)
-    recommended_size_usd: float # Dollar size after fractional Kelly + capital cap
-    expected_value_usd: float   # EV = net_edge × recommended_size_usd
-    is_actionable: bool         # net_edge > 0 AND implied_certainty > min_certainty
+    target_outcome: str          # "YES" or "NO"
+    market_price: float          # Polymarket token price (what we pay)
+    implied_certainty: float     # Our estimate of true probability
+    raw_edge: float              # implied_certainty - market_price
+    fee_cost: float
+    net_edge: float              # raw_edge - fee_cost
+    kelly_fraction: float
+    recommended_size_usd: float
+    expected_value_usd: float
+    is_actionable: bool
+    signal_reason: str = ""      # human-readable reason for the signal
     notes: str = ""
 
 
 class PricingEngine:
-    """
-    Computes edge and position sizing for a given condition result.
-    """
 
     def __init__(self) -> None:
-        self._sig_cfg = CONFIG.signal
-        self._risk_cfg = CONFIG.risk
-
-    # ------------------------------------------------------------------
+        self._sig  = CONFIG.signal
+        self._exit = CONFIG.exit
+        self._risk = CONFIG.risk
 
     def analyse(
         self,
@@ -59,39 +53,65 @@ class PricingEngine:
         capital_available_usd: float,
     ) -> Optional[PricingAnalysis]:
         """
-        Compute edge and sizing for a single market.
-        Returns None if the condition is indeterminate or market is untradeable.
+        Apply the two-sided signal logic:
+
+        BUY YES: BTC >= threshold  AND  yes_price < buy_yes_max_price
+        BUY NO:  BTC <  threshold  AND  yes_price > buy_no_min_yes_price
+
+        Returns None for near-boundary / unknown conditions.
         """
         if condition.outcome is None:
-            return None  # Can't trade uncertain conditions
+            return None
         if not market.tradeable:
             return None
 
-        # Determine which side to trade
         if condition.outcome == "YES":
-            target = "YES"
-            market_price = market.yes_price
-            token_id = market.yes_token_id
-        else:
-            # If condition says NO, trade the NO token
-            target = "NO"
-            market_price = market.no_price
-            token_id = market.no_token_id
-            # Flip implied certainty to NO side
-            condition_certainty = 1.0 - condition.implied_certainty
-            # Use adjusted certainty for NO side
-            implied_certainty = condition_certainty
+            # ── BUY YES signal ────────────────────────────────────────
+            market_price = max(0.001, min(0.999, market.yes_price))
+            implied_cert = condition.implied_certainty
+
+            # Gate: market must be meaningfully underpricing YES
+            if market_price >= self._sig.buy_yes_max_price:
+                log.debug(
+                    "Skip YES signal: yes_price=%.3f >= buy_yes_max=%.3f  %s",
+                    market_price, self._sig.buy_yes_max_price, market.question[:50],
+                )
+                return None
+
+            reason = (
+                f"BTC ${condition.current_btc_price:,.0f} ≥ ${condition.threshold_usd:,.0f}  "
+                f"but YES only priced at {market_price:.2f}"
+            )
             return self._compute(
-                condition, market, target, market_price, implied_certainty,
-                capital_available_usd
+                condition, market, "YES", market_price, implied_cert,
+                capital_available_usd, reason
             )
 
-        return self._compute(
-            condition, market, target, market_price,
-            condition.implied_certainty, capital_available_usd
-        )
+        else:  # condition.outcome == "NO"
+            # ── BUY NO signal ─────────────────────────────────────────
+            # We buy the NO token. Market is overpricing YES (underpricing NO).
+            market_price = max(0.001, min(0.999, market.no_price))
+            # implied_certainty for NO = 1 - implied_certainty_for_YES
+            implied_cert = 1.0 - condition.implied_certainty
 
-    # ------------------------------------------------------------------
+            # Gate: YES price must be irrationally high given BTC is below threshold
+            if market.yes_price <= self._sig.buy_no_min_yes_price:
+                log.debug(
+                    "Skip NO signal: yes_price=%.3f <= buy_no_min=%.3f  %s",
+                    market.yes_price, self._sig.buy_no_min_yes_price, market.question[:50],
+                )
+                return None
+
+            reason = (
+                f"BTC ${condition.current_btc_price:,.0f} < ${condition.threshold_usd:,.0f}  "
+                f"but YES still priced at {market.yes_price:.2f}  →  BUY NO"
+            )
+            return self._compute(
+                condition, market, "NO", market_price, implied_cert,
+                capital_available_usd, reason
+            )
+
+    # -----------------------------------------------------------------------
 
     def _compute(
         self,
@@ -101,59 +121,42 @@ class PricingEngine:
         market_price: float,
         implied_certainty: float,
         capital_available_usd: float,
+        signal_reason: str,
     ) -> PricingAnalysis:
-        sig = self._sig_cfg
-        risk = self._risk_cfg
 
-        # Guard against degenerate prices
-        market_price = max(0.001, min(0.999, market_price))
         implied_certainty = max(0.0, min(1.0, implied_certainty))
 
         raw_edge = implied_certainty - market_price
-        fee_cost = sig.taker_fee_fraction
-        net_edge = raw_edge - fee_cost - sig.safety_margin
+        fee      = self._sig.taker_fee_fraction
+        net_edge = raw_edge - fee
 
-        # Kelly criterion: f* = (p*b - q) / b  where b = odds paid = (1-p)/p
-        # Here: b = (1/market_price) - 1
-        b = (1.0 / market_price) - 1.0  # payout ratio (profit per unit staked)
+        # Kelly: f* = (p*b - q) / b   where b = (1/p) - 1
+        b = max(0.001, (1.0 / market_price) - 1.0)
         p = implied_certainty
-        q = 1.0 - implied_certainty
-        if b > 0:
-            kelly_f = (p * b - q) / b
-        else:
-            kelly_f = 0.0
+        q = 1.0 - p
+        kelly_f = max(0.0, (p * b - q) / b)
 
-        kelly_f = max(0.0, kelly_f)  # never short via Kelly
-
-        # Apply fractional Kelly for safety
-        fractional_kelly = kelly_f * risk.kelly_fraction
-
-        # Position size: min of (fractional Kelly × total capital, max per trade, available)
-        kelly_size = fractional_kelly * risk.total_capital_usd
-        recommended_size = min(kelly_size, risk.max_capital_per_trade_usd, capital_available_usd)
-        recommended_size = max(0.0, recommended_size)
+        fractional_kelly  = kelly_f * self._risk.kelly_fraction
+        kelly_size        = fractional_kelly * self._risk.total_capital_usd
+        recommended_size  = min(kelly_size, self._risk.max_capital_per_trade_usd, capital_available_usd)
+        recommended_size  = max(0.0, recommended_size)
 
         ev_usd = net_edge * recommended_size
 
         is_actionable = (
-            net_edge > 0
-            and implied_certainty >= sig.min_implied_certainty
+            net_edge >= self._sig.min_edge
             and recommended_size > 0
-            and market_price < implied_certainty  # sanity check
+            and implied_certainty > market_price   # sanity
         )
 
         METRICS.observe("raw_edge", raw_edge)
         METRICS.observe("net_edge", net_edge)
 
-        notes = (
-            f"price={market_price:.3f} certainty={implied_certainty:.3f} "
-            f"raw_edge={raw_edge:.3f} net_edge={net_edge:.3f} "
-            f"kelly={kelly_f:.3f} size=${recommended_size:.2f}"
-        )
-
         log.debug(
-            "Pricing analysis for %s [%s]: %s",
-            market.market_id, target, notes
+            "[%s] %s: mkt=%.3f impl=%.3f raw_edge=%.3f net=%.3f size=$%.0f ev=$%.3f",
+            target, market.market_id[:10],
+            market_price, implied_certainty, raw_edge, net_edge,
+            recommended_size, ev_usd,
         )
 
         return PricingAnalysis(
@@ -163,12 +166,11 @@ class PricingEngine:
             market_price=market_price,
             implied_certainty=implied_certainty,
             raw_edge=raw_edge,
-            fee_cost=fee_cost,
-            safety_margin=sig.safety_margin,
+            fee_cost=fee,
             net_edge=net_edge,
             kelly_fraction=kelly_f,
             recommended_size_usd=recommended_size,
             expected_value_usd=ev_usd,
             is_actionable=is_actionable,
-            notes=notes,
+            signal_reason=signal_reason,
         )

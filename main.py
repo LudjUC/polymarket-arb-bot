@@ -150,8 +150,14 @@ def run_simulation(duration_s: float = 180.0) -> None:
     print("   Markets  : Polymarket Gamma API (live)")
     print("═" * 65 + "\n")
 
+    from config import CONFIG as _C
+    print(f"   Strategy : BUY YES when BTC≥threshold and YES<{_C.signal.buy_yes_max_price:.0%}")
+    print(f"             BUY NO  when BTC<threshold and YES>{_C.signal.buy_no_min_yes_price:.0%}")
+    print(f"   Min edge : {_C.signal.min_edge:.0%}  |  Markets: expire within {_C.polymarket.max_time_to_expiry_s/3600:.0f}h")
+    print()
+
     sim = Simulator(duration_s=duration_s)
-    result = sim.run()   # always uses live WS path when tick_source=None
+    result = sim.run()
     result.print_summary()
     _print_final_summary()
 
